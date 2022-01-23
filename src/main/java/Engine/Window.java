@@ -1,19 +1,19 @@
 package Engine;
 
+import Util.Time;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import java.awt.event.WindowFocusListener;
-
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
     int width, height;
-    String title;
+    String title = glGetString(GL_SHADING_LANGUAGE_VERSION);
     private long glfwWindow;
     public float r, g, b, a;
 
@@ -35,10 +35,11 @@ public class Window {
         switch(newScene){
             case 0:
                 currentScene = new LevelEditorScene();
-
+                currentScene.init();
                 break;
             case 1:
                 currentScene = new LevelScene();
+                currentScene.init();
                 break;
             default:
                 assert false : "Unknow Scene '" + newScene + "'";

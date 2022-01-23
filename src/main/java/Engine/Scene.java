@@ -6,6 +6,8 @@ public abstract class Scene {
     //To be filled
     }
 
+    public abstract void init();
+
     public abstract void update(float dt);
 
 }

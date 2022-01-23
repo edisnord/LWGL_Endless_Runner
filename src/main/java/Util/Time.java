@@ -1,4 +1,4 @@
-package Engine;
+package Util;
 
 public class Time {
     public static float TimeStarted = System.nanoTime();
