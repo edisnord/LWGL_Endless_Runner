@@ -13,7 +13,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
     int width, height;
-    String title = glGetString(GL_SHADING_LANGUAGE_VERSION);
+    String title = "AAA";
     private long glfwWindow;
     public float r, g, b, a;
 
@@ -22,12 +22,12 @@ public class Window {
     private static Scene currentScene;
 
     private Window() {
-        this.width = 1080;
+        this.width = 1920;
         this.height = 1080;
         this.title = "Engine";
-        r = 0;
-        b = 0;
-        g = 0;
+        r = 1;
+        b = 1;
+        g = 1;
         a = 1;
     }
 
@@ -36,10 +36,12 @@ public class Window {
             case 0:
                 currentScene = new LevelEditorScene();
                 currentScene.init();
+                currentScene.start();
                 break;
             case 1:
                 currentScene = new LevelScene();
                 currentScene.init();
+                currentScene.start();
                 break;
             default:
                 assert false : "Unknow Scene '" + newScene + "'";
@@ -123,6 +125,8 @@ public class Window {
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
+            colorControls();
+
             if(dt >= 0) {
                 currentScene.update(dt);
             }
@@ -136,25 +140,16 @@ public class Window {
     }
 
     private void colorControls() {
-        if (KeyListener.isKeyPressed(GLFW_KEY_1) && r > 0) {
-            r -= 0.01f;
+        if (KeyListener.isKeyPressed(GLFW_KEY_1)) {
+            r = 0f;
+            g = 0f;
+            b = 0f;
         }
-        if (KeyListener.isKeyPressed(GLFW_KEY_2) && r < 1) {
-            r += 0.01f;
+        if (KeyListener.isKeyPressed(GLFW_KEY_2)) {
+            r = 1f;
+            g = 1f;
+            b = 1f;
         }
-        if (KeyListener.isKeyPressed(GLFW_KEY_Q) && g > 0) {
-            g -= 0.01f;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_W) && g < 1) {
-            g += 0.01f;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_A) && b > 0) {
-            b -= 0.01f;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_S) && b < 1) {
-            b += 0.01f;
-        }
-
     }
 }
 
