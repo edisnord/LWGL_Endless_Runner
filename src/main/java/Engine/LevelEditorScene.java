@@ -27,11 +27,13 @@ public class LevelEditorScene extends Scene {
     private boolean firstTime = true;
 
     private float[] vertexArray = {
-            // Position                    //Color                 //UV coordinates
-            100.5f, 50.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1f, 1f,    // bottom right 0
-            50.5f, 100.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0, 0,          // top left 1
-            100.5f, 100.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1, 0f,         // top right 2
-            50.5f, 50.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0, 1           // bottom left 3
+            // Position                    //Color             //UV coordinates
+            100.5f, 50.5f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,     1f, 1f,        // bottom right 0
+            50.5f, 100.5f, 0.0f,     0.0f, 1.0f, 0.0f, 1.0f,     0, 0,          // top left 1
+            100.5f, 100.5f, 0.0f   , 1.0f, 0.0f, 1.0f, 1.0f,     1f, 0f,        // top right 2
+            50.5f, 50.5f, 0.0f,      1.0f, 1.0f, 0.0f, 1.0f,     0, 1f,         // bottom left 3
+            -20f, -10f, 0.0f,        1.0f, 1.0f, 0.0f, 1.0f,     0, -0.1f,        // 4
+            30, -10f, 0.0f,          1.0f, 1.0f, 0.0f, 1.0f,    -1f, -1f,       // 5
 
     };
 
@@ -39,7 +41,8 @@ public class LevelEditorScene extends Scene {
             //DRAWING DUHET BERE COUNTER CLOCKWISE
             2, 1, 0, // Top right triangle
             0, 1, 3, // bottom left triangle
-
+            5, 0, 4,
+            3, 0, 4
     };
 
     private int vaoID, vboID, eboID;

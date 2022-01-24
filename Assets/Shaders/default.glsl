@@ -29,5 +29,6 @@
 
     void main()
     {
+
         color = texture(TEX_SAMPLER, fTexCoords);
     }
