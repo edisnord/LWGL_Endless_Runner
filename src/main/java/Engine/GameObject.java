@@ -10,33 +10,40 @@ public class GameObject {
     public Transform transform;
 
     public GameObject(String name) {
-        this.transform = new Transform();
         this.name = name;
         this.components = new ArrayList<>();
+        this.transform = new Transform();
+    }
+
+    public GameObject(String name, Transform transform) {
+        this.name = name;
+        this.components = new ArrayList<>();
+        this.transform = transform;
     }
 
     public <T extends Component> T getComponent(Class<T> componentClass) {
-        try {
-            for (Component c : components) {
-                if (componentClass.isAssignableFrom(c.getClass())) {
+        for (Component c : components) {
+            if (componentClass.isAssignableFrom(c.getClass())) {
+                try {
                     return componentClass.cast(c);
+                } catch (ClassCastException e) {
+                    e.printStackTrace();
+                    assert false : "Error: Casting component.";
                 }
             }
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-            assert false : "Error: Casting component.";
         }
+
         return null;
     }
 
-    public <T extends Component> T removeComponent(Class<T> componentClass) {
-        for (int i = 0; i < components.size(); i++) {
+    public <T extends Component> void removeComponent(Class<T> componentClass) {
+        for (int i=0; i < components.size(); i++) {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
                 components.remove(i);
+                return;
             }
         }
-        return null;
     }
 
     public void addComponent(Component c) {
@@ -45,15 +52,14 @@ public class GameObject {
     }
 
     public void update(float dt) {
-        for (int i = 0; i < components.size(); i++) {
+        for (int i=0; i < components.size(); i++) {
             components.get(i).update(dt);
         }
     }
 
     public void start() {
-        for (int i = 0; i < components.size(); i++) {
+        for (int i=0; i < components.size(); i++) {
             components.get(i).start();
         }
     }
-
 }
