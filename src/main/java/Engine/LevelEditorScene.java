@@ -1,6 +1,7 @@
 package Engine;
 
 import Components.SpriteRenderer;
+import Util.AssetPool;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -14,16 +15,16 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void init() {
-        this.camera = new Camera(new Vector2f());
+        this.camera = new Camera(new Vector2f(-250.0f, 0));
 
-        int xOffset = 10;
-        int yOffset = 10;
+        int xOffset = 0;
+        int yOffset = 0;
 
         float totalWidth = (float)(600 - xOffset * 2);
         float totalHeight = (float)(300 - yOffset * 2);
         float sizeX = totalWidth / 100.0f;
         float sizeY = totalHeight / 100.0f;
-        float padding = 3;
+        float padding = 0;
 
         for (int x=0; x < 100; x++) {
             for (int y=0; y < 100; y++) {
@@ -35,6 +36,13 @@ public class LevelEditorScene extends Scene {
                 this.addGameObjectToScene(go);
             }
         }
+
+        loadResources();
+
+    }
+
+    private void loadResources() {
+        AssetPool.getShader("assets/shaders/default.glsl");
     }
 
     @Override
