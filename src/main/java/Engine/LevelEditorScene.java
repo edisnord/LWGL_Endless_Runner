@@ -15,13 +15,13 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void init() {
-        this.camera = new Camera(new Vector2f(-250.0f, 0));
+        this.camera = new Camera(new Vector2f());
 
         int xOffset = 0;
         int yOffset = 0;
 
-        float totalWidth = (float)(600 - xOffset * 2);
-        float totalHeight = (float)(300 - yOffset * 2);
+        float totalWidth = (float)(1280 - xOffset * 2);
+        float totalHeight = (float)(720 - yOffset * 2);
         float sizeX = totalWidth / 100.0f;
         float sizeY = totalHeight / 100.0f;
         float padding = 0;
