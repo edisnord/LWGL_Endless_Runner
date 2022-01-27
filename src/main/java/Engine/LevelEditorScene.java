@@ -1,6 +1,7 @@
 package Engine;
 
 import Components.SpriteRenderer;
+import Render.Texture;
 import Util.AssetPool;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -17,25 +18,13 @@ public class LevelEditorScene extends Scene {
     public void init() {
         this.camera = new Camera(new Vector2f());
 
-        int xOffset = 0;
-        int yOffset = 0;
+        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(250, 250)));
+        obj1.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/testImage.png")));
+        this.addGameObjectToScene(obj1);
 
-        float totalWidth = (float)(1280 - xOffset * 2);
-        float totalHeight = (float)(720 - yOffset * 2);
-        float sizeX = totalWidth / 100.0f;
-        float sizeY = totalHeight / 100.0f;
-        float padding = 0;
-
-        for (int x=0; x < 100; x++) {
-            for (int y=0; y < 100; y++) {
-                float xPos = xOffset + (x * sizeX) + (padding * x);
-                float yPos = yOffset + (y * sizeY) + (padding * y);
-
-                GameObject go = new GameObject("Obj" + x + "" + y, new Transform(new Vector2f(xPos, yPos), new Vector2f(sizeX, sizeY)));
-                go.addComponent(new SpriteRenderer(new Vector4f(xPos / totalWidth, yPos / totalHeight, 1, 1)));
-                this.addGameObjectToScene(go);
-            }
-        }
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(300, 100), new Vector2f(250, 250)));
+        obj2.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/testImage2.png")));
+        this.addGameObjectToScene(obj2);
 
         loadResources();
 
@@ -74,7 +63,6 @@ public class LevelEditorScene extends Scene {
         if(KeyListener.isKeyPressed(GLFW_KEY_1)){
             float x = 40.0f;
             float y = 22.0f;
-            //ZOOM WIP
         }
     }
 

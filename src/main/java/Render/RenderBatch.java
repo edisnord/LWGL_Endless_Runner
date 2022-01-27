@@ -5,6 +5,7 @@
         import Engine.Window;
         import Render.Shader;
         import Util.AssetPool;
+        import org.joml.Vector2f;
         import org.joml.Vector4f;
 
         import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class RenderBatch {
     private boolean hasRoom;
     private float[] vertices;
     private List<Texture> textures;
+    private int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
     private int vaoID, vboID;
     private int maxBatchSize;
@@ -90,46 +92,22 @@ public class RenderBatch {
 
     public void addSprite(SpriteRenderer spr) {
         // Get index and add renderObject
-        int index = this.numSprites;
-        this.sprites[index] = spr;
-        this.numSprites++;
-
-        if(spr.getTexture() != null){
+        if(spr.getTexture() != null && numSprites <= maxBatchSize){
             if(!textures.contains(spr.getTexture())){
+
+                int index = this.numSprites;
+                this.sprites[index] = spr;
+                this.numSprites++;
+
                 textures.add(spr.getTexture());
+                loadVertexProperties(index);
+
+            } else if(numSprites > maxBatchSize){
+                this.hasRoom = false;
             }
 
         }
 
-        // Add properties to local vertices array
-        loadVertexProperties(index);
-
-        if (numSprites >= this.maxBatchSize) {
-            this.hasRoom = false;
-        }
-    }
-
-    public void render() {
-        // For now, we will rebuffer all data every frame
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
-
-        // Use shader
-        shader.use();
-        shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
-        shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
-
-        glBindVertexArray(vaoID);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glDrawElements(GL_TRIANGLES, this.numSprites * 6, GL_UNSIGNED_INT, 0);
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glBindVertexArray(0);
-
-        shader.detach();
     }
 
     private void loadVertexProperties(int index) {
@@ -139,7 +117,17 @@ public class RenderBatch {
         int offset = index * 4 * VERTEX_SIZE;
 
         Vector4f color = sprite.getColor();
+        Vector2f[] texCoords = sprite.getTexCoords();
 
+        int texID = 0;
+        if(sprite.getTexture() != null){
+            for (int i = 0; i < textures.size(); i++){
+                if(textures.get(i) == sprite.getTexture()){
+                    texID = i + 1;
+                    break;
+                }
+            }
+        }
 
         // Add vertices with the appropriate properties
         float xAdd = 1.0f;
@@ -163,9 +151,14 @@ public class RenderBatch {
             vertices[offset + 4] = color.z;
             vertices[offset + 5] = color.w;
 
-            offset += VERTEX_SIZE;
-
             //Load texture coords
+            vertices[offset + 6] = texCoords[i].x;
+            vertices[offset + 7] = texCoords[i].y;
+
+            //Load texture ID
+            vertices[offset + 8] = texID;
+
+            offset += VERTEX_SIZE;
         }
     }
 
@@ -195,7 +188,42 @@ public class RenderBatch {
         elements[offsetArrayIndex + 5] = offset + 1;
     }
 
+    public void render() {
+        // For now, we will rebuffer all data every frame
+        glBindBuffer(GL_ARRAY_BUFFER, vboID);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+
+        // Use shader
+        shader.use();
+        shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
+        shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
+
+        for(int i = 0; i < textures.size(); i++){
+            glActiveTexture(GL_TEXTURE0 + i + 1);
+            textures.get(i).bind();
+        }
+
+        shader.uploadIntArray("uTextures", texSlots);
+
+        glBindVertexArray(vaoID);
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glDrawElements(GL_TRIANGLES, this.numSprites * 6, GL_UNSIGNED_INT, 0);
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glBindVertexArray(0);
+
+        for(int i = 0; i < textures.size(); i++){
+            textures.get(i).unbind();
+        }
+
+        shader.detach();
+    }
+
     public boolean hasRoom() {
         return this.hasRoom;
     }
 }
+
