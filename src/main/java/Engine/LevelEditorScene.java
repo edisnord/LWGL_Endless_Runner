@@ -1,6 +1,8 @@
 package Engine;
 
+import Components.Sprite;
 import Components.SpriteRenderer;
+import Components.Spritesheet;
 import Render.Texture;
 import Util.AssetPool;
 import org.joml.Vector2f;
@@ -16,22 +18,29 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void init() {
-        this.camera = new Camera(new Vector2f());
-
-        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(250, 250)));
-        obj1.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/testImage.png")));
-        this.addGameObjectToScene(obj1);
-
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(300, 100), new Vector2f(250, 250)));
-        obj2.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/testImage2.png")));
-        this.addGameObjectToScene(obj2);
 
         loadResources();
+        this.camera = new Camera(new Vector2f());
+
+        Spritesheet sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
+
+        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(250, 250)));
+        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        this.addGameObjectToScene(obj1);
+
+        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(350, 100), new Vector2f(250, 250)));
+        obj2.addComponent(new SpriteRenderer(sprites.getSprite(10)));
+        this.addGameObjectToScene(obj2);
 
     }
 
     private void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
+
+        AssetPool.addSpritesheet("assets/images/spritesheet.png"
+                ,new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),
+                        16, 16, 26, 0));
+
     }
 
     @Override
