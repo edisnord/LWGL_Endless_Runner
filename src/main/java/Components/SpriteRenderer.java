@@ -23,11 +23,12 @@ public class SpriteRenderer extends Component {
     public SpriteRenderer(Sprite sprite) {
         this.sprite = sprite;
         this.color = new Vector4f(1, 1, 1, 1);
+        this.isDirty = false;
     }
 
     @Override
     public void start() {
-        this.lastTransform = gameObject.transform;
+        this.lastTransform = gameObject.transform.copy();
     }
 
     @Override

@@ -13,24 +13,23 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class LevelEditorScene extends Scene {
 
-    private float xpos;
-    GameObject player;
+    private GameObject obj1;
+    private Spritesheet sprites;
 
     public LevelEditorScene() {
-        xpos = 100f;
+
     }
 
     @Override
     public void init() {
-
         loadResources();
-        this.camera = new Camera(new Vector2f());
 
-        Spritesheet sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
+        this.camera = new Camera(new Vector2f(-250, 0));
 
-        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(xpos, 100), new Vector2f(250, 250)));
+        sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
+
+        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(128, 128)));
         obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
-        obj1.addComponent(new PlayerController(1f, 1f));
         this.addGameObjectToScene(obj1);
 
     }
@@ -38,15 +37,31 @@ public class LevelEditorScene extends Scene {
     private void loadResources() {
         AssetPool.getShader("assets/shaders/default.glsl");
 
-        AssetPool.addSpritesheet("assets/images/spritesheet.png"
-                ,new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),
+        AssetPool.addSpritesheet("assets/images/spritesheet.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),
                         16, 16, 26, 0));
-
     }
+
+    private int spriteIndex = 0;
+    private float spriteFlipTime = 0.2f;
+    private float spriteFlipTimeLeft = 0.0f;
+
 
     @Override
     public void update(float dt) {
+        spriteFlipTimeLeft -= dt;
+//        if(spriteFlipTimeLeft <= 0){
+//            spriteFlipTimeLeft = spriteFlipTime;
+//            spriteIndex++;
+//            if(spriteIndex > 4) spriteIndex = 0;
+//
+//            SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
+//            sr.setSprite(sprites.getSprite(spriteIndex));
+//        }
+
         System.out.println("FPS: " + (1.0f / dt));
+
+
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);
@@ -58,17 +73,34 @@ public class LevelEditorScene extends Scene {
     }
 
     private void moveCamera(float dt) {
+
+        if (!KeyListener.isKeyPressed(GLFW_KEY_RIGHT) && !KeyListener.isKeyPressed(GLFW_KEY_LEFT) && !
+                KeyListener.isKeyPressed(GLFW_KEY_UP) && !KeyListener.isKeyPressed(GLFW_KEY_DOWN)){
+            SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
+            sr.setSprite(sprites.getSprite(0));
+        }
+
         if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
-            camera.position.x -= dt * 300.0f;
+            obj1.transform.position.x += 3f;
+            spriteFlipTimeLeft -= dt;
+            if(spriteFlipTimeLeft <= 0){
+                spriteFlipTimeLeft = spriteFlipTime;
+                spriteIndex++;
+                if(spriteIndex > 2) spriteIndex = 1;
+
+                SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
+                sr.setSprite(sprites.getSprite(spriteIndex));
+            }
+
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
-            camera.position.x += dt * 300.0f;
+            obj1.transform.position.x -= 1f;
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
-            camera.position.y -= dt * 300.0f;
+            obj1.transform.position.y += 1f;
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
-            camera.position.y += dt * 300.0f;
+            obj1.transform.position.y -= 1f;
         }
     }
 
