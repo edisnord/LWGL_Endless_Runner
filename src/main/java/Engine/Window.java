@@ -138,6 +138,8 @@ public class Window {
                 currentScene.update(dt);
             }
 
+            changeColor();
+
             glfwSwapBuffers(glfwWindow);
 
             endTime = Time.getTime();
@@ -145,5 +147,14 @@ public class Window {
             beginTime = endTime;
         }
     }
+
+    public void changeColor(){
+        if (KeyListener.isKeyPressed(GLFW_KEY_1)) {
+            r = 1.0f;
+            g = 1.0f;
+            b = 1.0f;
+        }
+    }
+
 }
 

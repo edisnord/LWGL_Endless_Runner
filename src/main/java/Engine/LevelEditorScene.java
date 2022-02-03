@@ -1,5 +1,6 @@
 package Engine;
 
+import Components.PlayerController;
 import Components.Sprite;
 import Components.SpriteRenderer;
 import Components.Spritesheet;
@@ -12,8 +13,11 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class LevelEditorScene extends Scene {
 
-    public LevelEditorScene() {
+    private float xpos;
+    GameObject player;
 
+    public LevelEditorScene() {
+        xpos = 100f;
     }
 
     @Override
@@ -24,13 +28,10 @@ public class LevelEditorScene extends Scene {
 
         Spritesheet sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
 
-        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(250, 250)));
+        GameObject obj1 = new GameObject("Object 1", new Transform(new Vector2f(xpos, 100), new Vector2f(250, 250)));
         obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        obj1.addComponent(new PlayerController(1f, 1f));
         this.addGameObjectToScene(obj1);
-
-        GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(350, 100), new Vector2f(250, 250)));
-        obj2.addComponent(new SpriteRenderer(sprites.getSprite(10)));
-        this.addGameObjectToScene(obj2);
 
     }
 
@@ -68,10 +69,6 @@ public class LevelEditorScene extends Scene {
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
             camera.position.y += dt * 300.0f;
-        }
-        if(KeyListener.isKeyPressed(GLFW_KEY_1)){
-            float x = 40.0f;
-            float y = 22.0f;
         }
     }
 

@@ -48,7 +48,6 @@ public class RenderBatch {
     private Shader shader;
 
     public RenderBatch(int maxBatchSize) {
-        textures = new ArrayList<>();
         shader = AssetPool.getShader("assets/shaders/default.glsl");
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
@@ -56,6 +55,7 @@ public class RenderBatch {
         // 4 vertices quads
         vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
 
+        textures = new ArrayList<>();
         this.numSprites = 0;
         this.hasRoom = true;
     }
@@ -92,21 +92,22 @@ public class RenderBatch {
 
     public void addSprite(SpriteRenderer spr) {
         // Get index and add renderObject
+        int index = this.numSprites;
+        this.sprites[index] = spr;
+        this.numSprites++;
+
         if(spr.getTexture() != null && numSprites <= maxBatchSize){
             if(!textures.contains(spr.getTexture())){
-
-                int index = this.numSprites;
-                this.sprites[index] = spr;
-                this.numSprites++;
-
                 textures.add(spr.getTexture());
-                loadVertexProperties(index);
-
-            } else if(numSprites > maxBatchSize){
-                this.hasRoom = false;
             }
-
         }
+
+        loadVertexProperties(index);
+
+        if(numSprites > maxBatchSize){
+            this.hasRoom = false;
+        }
+
 
     }
 
@@ -189,9 +190,20 @@ public class RenderBatch {
     }
 
     public void render() {
-        // For now, we will rebuffer all data every frame
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        boolean rebufferData = false;
+        for(int i=0; i < numSprites; i++){
+            SpriteRenderer spr = sprites[i];
+            if(spr.isDirty){
+                loadVertexProperties(i);
+                spr.setClean();
+                rebufferData = true;
+            }
+        }
+
+        if(!rebufferData) {
+            glBindBuffer(GL_ARRAY_BUFFER, vboID);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        }
 
         // Use shader
         shader.use();
