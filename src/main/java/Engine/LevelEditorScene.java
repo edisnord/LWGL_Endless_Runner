@@ -33,8 +33,8 @@ public class LevelEditorScene extends Scene {
 
         this.camera = new Camera(new Vector2f(-250, 0));
 
-        for(int i = -4; i < 11; i++){
-            for(int j = 0; j < 10; j++){
+        for(int i = -4; i < 25; i++){
+            for(int j = 0; j < 14; j++){
                 GameObject bg = new GameObject("bg 1", new Transform(new Vector2f(i * 100, j * 100), new Vector2f(100, 100)));
                 bg.addComponent(new SpriteRenderer(sprites.get(1).getSprite(11)));
                 this.addGameObjectToScene(bg);
@@ -111,7 +111,7 @@ public class LevelEditorScene extends Scene {
             if(spriteFlipTimeLeft <= 0){
                 spriteFlipTimeLeft = spriteFlipTime;
                 spriteIndex++;
-                if(spriteIndex > 19) spriteIndex = 18;
+                if(spriteIndex > 19 || spriteIndex < 18) spriteIndex = 18;
 
                 SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
                 sr.setSprite(sprites.get(0).getSprite(spriteIndex));
@@ -120,10 +120,18 @@ public class LevelEditorScene extends Scene {
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
             obj1.transform.position.x -= 1f;
+            spriteFlipTimeLeft -= dt;
+            if(spriteFlipTimeLeft <= 0){
+                spriteFlipTimeLeft = spriteFlipTime;
+                spriteIndex++;
+                if(spriteIndex > 55 || spriteIndex < 54) spriteIndex = 54;
+
+                SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
+                sr.setSprite(sprites.get(0).getSprite(spriteIndex));
+            }
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
 
-            spriteIndex = 0;
             obj1.transform.position.y += 1f;
             spriteFlipTimeLeft -= dt;
             if(spriteFlipTimeLeft <= 0){
@@ -135,8 +143,18 @@ public class LevelEditorScene extends Scene {
                 sr.setSprite(sprites.get(0).getSprite(spriteIndex));
             }
         }
+
         if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
             obj1.transform.position.y -= 1f;
+            spriteFlipTimeLeft -= dt;
+            if(spriteFlipTimeLeft <= 0){
+                spriteFlipTimeLeft = spriteFlipTime;
+                spriteIndex++;
+                if(spriteIndex > 37 || spriteIndex < 36) spriteIndex = 36;
+
+                SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
+                sr.setSprite(sprites.get(0).getSprite(spriteIndex));
+            }
         }
     }
 
