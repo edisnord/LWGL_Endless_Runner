@@ -9,14 +9,19 @@ import Util.AssetPool;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class LevelEditorScene extends Scene {
 
     private GameObject obj1;
-    private Spritesheet sprites;
+    private List<Spritesheet> sprites;
+
 
     public LevelEditorScene() {
+        sprites = new ArrayList<>();
 
     }
 
@@ -24,13 +29,22 @@ public class LevelEditorScene extends Scene {
     public void init() {
         loadResources();
 
+
+
         this.camera = new Camera(new Vector2f(-250, 0));
 
-        sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
+        for(int i = -4; i < 11; i++){
+            for(int j = 0; j < 10; j++){
+                GameObject bg = new GameObject("bg 1", new Transform(new Vector2f(i * 100, j * 100), new Vector2f(100, 100)));
+                bg.addComponent(new SpriteRenderer(sprites.get(1).getSprite(11)));
+                this.addGameObjectToScene(bg);
+            }
+        }
 
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(128, 128)));
-        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(128, 145)));
+        obj1.addComponent(new SpriteRenderer(sprites.get(0).getSprite(18)));
         this.addGameObjectToScene(obj1);
+
 
     }
 
@@ -40,9 +54,19 @@ public class LevelEditorScene extends Scene {
         AssetPool.addSpritesheet("assets/images/spritesheet.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),
                         16, 16, 26, 0));
+        AssetPool.addSpritesheet("assets/images/charactersheet.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/charactersheet.png"),
+                        16, 18, 72, 0));
+        AssetPool.addSpritesheet("assets/images/areasheet.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/areasheet.png"),
+                        16, 16, 30, 0));
+
+        sprites.add(0, AssetPool.getSpritesheet("assets/images/charactersheet.png"));
+        sprites.add(1, AssetPool.getSpritesheet("assets/images/areasheet.png"));
+
     }
 
-    private int spriteIndex = 0;
+    private int spriteIndex = 18;
     private float spriteFlipTime = 0.2f;
     private float spriteFlipTimeLeft = 0.0f;
 
@@ -74,22 +98,23 @@ public class LevelEditorScene extends Scene {
 
     private void moveCamera(float dt) {
 
-        if (!KeyListener.isKeyPressed(GLFW_KEY_RIGHT) && !KeyListener.isKeyPressed(GLFW_KEY_LEFT) && !
-                KeyListener.isKeyPressed(GLFW_KEY_UP) && !KeyListener.isKeyPressed(GLFW_KEY_DOWN)){
-            SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
-            sr.setSprite(sprites.getSprite(0));
-        }
+//        if (!KeyListener.isKeyPressed(GLFW_KEY_RIGHT) && !KeyListener.isKeyPressed(GLFW_KEY_LEFT) && !
+//                KeyListener.isKeyPressed(GLFW_KEY_UP) && !KeyListener.isKeyPressed(GLFW_KEY_DOWN)){
+//            SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
+//            sr.setSprite(sprites.getSprite(0));
+//        }
 
         if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
+
             obj1.transform.position.x += 3f;
             spriteFlipTimeLeft -= dt;
             if(spriteFlipTimeLeft <= 0){
                 spriteFlipTimeLeft = spriteFlipTime;
                 spriteIndex++;
-                if(spriteIndex > 2) spriteIndex = 1;
+                if(spriteIndex > 19) spriteIndex = 18;
 
                 SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
-                sr.setSprite(sprites.getSprite(spriteIndex));
+                sr.setSprite(sprites.get(0).getSprite(spriteIndex));
             }
 
         }
@@ -97,7 +122,18 @@ public class LevelEditorScene extends Scene {
             obj1.transform.position.x -= 1f;
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
+
+            spriteIndex = 0;
             obj1.transform.position.y += 1f;
+            spriteFlipTimeLeft -= dt;
+            if(spriteFlipTimeLeft <= 0){
+                spriteFlipTimeLeft = spriteFlipTime;
+                spriteIndex++;
+                if(spriteIndex > 2) spriteIndex = 0;
+
+                SpriteRenderer sr = obj1.getComponent(SpriteRenderer.class);
+                sr.setSprite(sprites.get(0).getSprite(spriteIndex));
+            }
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
             obj1.transform.position.y -= 1f;

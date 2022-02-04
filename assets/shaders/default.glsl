@@ -14,6 +14,7 @@ out float fTexId;
 
 void main()
 {
+
     fColor = aColor;
     fTexCoords = aTexCoords;
     fTexId = aTexId;
@@ -36,8 +37,9 @@ void main()
 {
     if (fTexId > 0) {
         int id = int(fTexId);
-      color = fColor * texture(uTextures[id], fTexCoords);
-//        color = vec4(fTexCoords, 0, 1);
+        color = fColor * texture(uTextures[id], fTexCoords);
+        if(color.a < 0.1) discard;
+
     } else {
         color = fColor;
     }
