@@ -24,8 +24,8 @@ public class Window {
     private static Scene currentScene;
 
     private Window() {
-        this.width = 1920;
-        this.height = 1080;
+        this.width = 980;
+        this.height = 540;
         this.title = "Mario";
         r = 0;
         b = 0;
@@ -90,8 +90,8 @@ public class Window {
         // Configure GLFW
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
 
         // Create the window
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);

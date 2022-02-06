@@ -19,16 +19,16 @@ public class PlayerController extends Component {
     @Override
     public void update(float dt) {
 
-        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
-            gameObject.transform.position.x += xVel;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
-            gameObject.transform.position.x -= xVel;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
+//        if (KeyListener.isKeyPressed(GLFW_KEY_RIGHT)) {
+//            gameObject.transform.position.x += xVel;
+//        }
+//        if (KeyListener.isKeyPressed(GLFW_KEY_LEFT)) {
+//            gameObject.transform.position.x -= xVel;
+//        }
+        if (KeyListener.isKeyPressed(GLFW_KEY_UP) && gameObject.transform.position.y < 560) {
             gameObject.transform.position.y += yVel;
         }
-        if (KeyListener.isKeyPressed(GLFW_KEY_DOWN)) {
+        if (KeyListener.isKeyPressed(GLFW_KEY_DOWN) && gameObject.transform.position.y > 0) {
             gameObject.transform.position.y -= yVel;
         }
 

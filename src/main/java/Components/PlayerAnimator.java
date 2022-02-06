@@ -31,7 +31,7 @@ public class PlayerAnimator extends Animator {
                 0, 1
         };
         int[] rightIndices = {
-                19, 20
+                18, 19, 20
         };
         int[] downIndices = {
                 37, 38
@@ -40,10 +40,12 @@ public class PlayerAnimator extends Animator {
                 55, 56
         };
 
-        animateOnKeyHold(GLFW_KEY_UP, upIndices, 0.2f, dt);
-        animateOnKeyHold(GLFW_KEY_DOWN, downIndices, 0.2f, dt);
-        animateOnKeyHold(GLFW_KEY_LEFT, leftIndices, 0.2f, dt);
-        animateOnKeyHold(GLFW_KEY_RIGHT, rightIndices, 0.2f, dt);
+//        animateOnKeyHold(GLFW_KEY_UP, upIndices, 0.2f, dt);
+//        animateOnKeyHold(GLFW_KEY_DOWN, downIndices, 0.2f, dt);
+//        animateOnKeyHold(GLFW_KEY_LEFT, leftIndices, 0.2f, dt);
+//        animateOnKeyHold(GLFW_KEY_RIGHT, rightIndices, 0.2f, dt);
+
+          animateIdle(rightIndices, 0.1f, dt);
 
     }
 
@@ -64,6 +66,26 @@ public class PlayerAnimator extends Animator {
                 animTempTime = timeBetweenFrames;
 
             }
+        }
+
+
+    }
+
+    private void animateIdle(int[] sequence, float speed, float dt) {
+
+        float timeBetweenFrames = speed;
+
+            animTempTime -= dt;
+            if (animTempTime <= 0) {
+                if (animIndex == sequence.length) animIndex = 0;
+
+                spriteRenderer.setSprite(spritesheet.getSprite(sequence[animIndex]));
+
+                animIndex++;
+
+                animTempTime = timeBetweenFrames;
+
+
         }
 
 

@@ -1,6 +1,7 @@
 
         package Render;
 
+        import Components.Sprite;
         import Components.SpriteRenderer;
         import Engine.Window;
         import Render.Shader;
@@ -36,7 +37,7 @@ public class RenderBatch {
     private final int VERTEX_SIZE = 9;
     private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
-    private SpriteRenderer[] sprites;
+    private List<SpriteRenderer> sprites;
     private int numSprites;
     private boolean hasRoom;
     private float[] vertices;
@@ -49,7 +50,7 @@ public class RenderBatch {
 
     public RenderBatch(int maxBatchSize) {
         shader = AssetPool.getShader("assets/shaders/default.glsl");
-        this.sprites = new SpriteRenderer[maxBatchSize];
+        this.sprites  = new ArrayList<>();
         this.maxBatchSize = maxBatchSize;
 
         // 4 vertices quads
@@ -93,7 +94,7 @@ public class RenderBatch {
     public void addSprite(SpriteRenderer spr) {
         // Get index and add renderObject
         int index = this.numSprites;
-        this.sprites[index] = spr;
+        sprites.add(index, spr);
         this.numSprites++;
 
         if(spr.getTexture() != null && numSprites <= maxBatchSize){
@@ -104,7 +105,7 @@ public class RenderBatch {
 
         loadVertexProperties(index);
 
-        if(numSprites > maxBatchSize){
+        if(numSprites >= maxBatchSize){
             this.hasRoom = false;
         }
 
@@ -112,7 +113,7 @@ public class RenderBatch {
     }
 
     private void loadVertexProperties(int index) {
-        SpriteRenderer sprite = this.sprites[index];
+        SpriteRenderer sprite = sprites.get(index);
 
         // Find offset within array (4 vertices per sprite)
         int offset = index * 4 * VERTEX_SIZE;
@@ -192,7 +193,7 @@ public class RenderBatch {
     public void render() {
         boolean rebufferData = false;
         for (int i=0; i < numSprites; i++) {
-            SpriteRenderer spr = sprites[i];
+            SpriteRenderer spr = sprites.get(i);
             if (spr.isDirty()) {
                 loadVertexProperties(i);
                 spr.setClean();
@@ -243,6 +244,13 @@ public class RenderBatch {
 
     public boolean hasTexture(Texture tex){
         return this.textures.contains(tex);
+    }
+
+    public boolean hasSprite(SpriteRenderer spr){return this.sprites.contains(spr);}
+
+    public void removeSprite(SpriteRenderer spr){
+        sprites.remove(spr);
+        numSprites--;
     }
 
 }

@@ -2,28 +2,62 @@ package Engine;
 
 import org.joml.Vector2f;
 
-import javax.swing.text.html.ObjectView;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Transform {
 
     public Vector2f position;
     public Vector2f scale;
+    public boolean isParent;
+    public Transform parent;
+    public List<Transform> children;
+
+    private Vector2f relPosition;
+
+    public void update(){
+        if(!isParent){
+            this.position = new Vector2f(parent.position.x + relPosition.x, parent.position.y + relPosition.y);
+        } else {
+            for (Transform t: children) {
+                t.update();
+            }
+        }
+    }
 
     public Transform() {
+        isParent = true;
         init(new Vector2f(), new Vector2f());
+        children = new ArrayList<>();
     }
 
     public Transform(Vector2f position) {
+        isParent = true;
         init(position, new Vector2f());
+        children = new ArrayList<>();
     }
 
     public Transform(Vector2f position, Vector2f scale) {
+        isParent = true;
         init(position, scale);
+        children = new ArrayList<>();
+    }
+
+    private Transform(Vector2f position, Vector2f scale, Transform parent){
+        isParent = false;
+        this.parent = parent;
+        init(new Vector2f(position.x + parent.position.x, position.y + parent.position.y), scale);
     }
 
     public void init(Vector2f position, Vector2f scale) {
-        this.position = position;
-        this.scale = scale;
+        if(isParent) {
+            this.position = position;
+            this.scale = scale;
+        } else {
+            this.relPosition = position;
+            this.scale = scale;
+            this.position = new Vector2f(parent.position.x + relPosition.x, parent.position.y + relPosition.y);
+        }
     }
 
     public Transform copy(){
@@ -35,6 +69,16 @@ public class Transform {
     public void copy(Transform to){
         to.position.set(this.position);
         to.scale.set(this.scale);
+    }
+
+    public Transform addAndReturnChild(Transform childe){
+        Transform child = new Transform(childe.position, childe.scale, this);
+        children.add(child);
+        return child;
+    }
+
+    public void deleteChild(Transform child){
+        children.remove(child);
     }
 
     @Override

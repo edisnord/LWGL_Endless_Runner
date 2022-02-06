@@ -36,6 +36,10 @@ public abstract class Scene {
         }
     }
 
+    public void removeGameObjectFromScene(GameObject go){
+        gameObjects.remove(go);
+    }
+
     public abstract void update(float dt);
 
     public Camera camera() {

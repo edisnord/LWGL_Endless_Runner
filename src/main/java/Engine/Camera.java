@@ -12,7 +12,7 @@ public class Camera {
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
-        adjustProjection(80.0f, 44.0f);
+        adjustProjection(40.0f, 22.0f);
     }
 
     public void adjustProjection(float zoomr, float zooml){
@@ -24,7 +24,7 @@ public class Camera {
 
     public Matrix4f getViewMatrix(){
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
-        Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
+        Vector3f cameraUp = new Vector3f(0.0f, 0.1f, 0.0f);
         this.viewMatrix.identity();
         //Creates view matrix parameter1: camera position parameter2: direction camera looks at
         this.viewMatrix = viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f),

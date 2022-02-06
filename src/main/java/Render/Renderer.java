@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Renderer {
     private final int MAX_BATCH_SIZE = 1000;
-    private List<RenderBatch> batches;
+    public List<RenderBatch> batches;
 
     public Renderer() {
         this.batches = new ArrayList<>();
@@ -26,7 +26,7 @@ public class Renderer {
         for(RenderBatch batch : batches) {
             if (batch.hasRoom()) {
                 Texture tex = sprite.getTexture();
-                if(tex == null || (batch.hasTexture(tex) || batch.hasTextureRoom())){
+                if(tex == null || (batch.hasTexture(tex)) && batch.hasTextureRoom()){
                     batch.addSprite(sprite);
                     added = true;
                     break;
@@ -43,6 +43,15 @@ public class Renderer {
                 }
             }
 
+            public void remove(GameObject go){
+                SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
+                for (RenderBatch batch: batches) {
+                    if(batch.hasSprite(spr)){
+                        batch.removeSprite(spr);
+                    }
+                }
+
+            }
 
         public void render(){
             for(RenderBatch batch : batches){
