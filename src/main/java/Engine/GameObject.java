@@ -6,7 +6,7 @@ import java.util.List;
 public class GameObject {
 
     private String name;
-    private List<Component> components;
+    public List<Component> components;
     public Transform transform;
 
     public GameObject(String name) {
@@ -65,4 +65,9 @@ public class GameObject {
             components.get(i).start();
         }
     }
+
+    public String getName() {
+        return name;
+    }
 }
+

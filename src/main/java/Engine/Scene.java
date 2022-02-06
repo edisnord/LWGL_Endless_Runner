@@ -36,6 +36,15 @@ public abstract class Scene {
         }
     }
 
+    public GameObject getGameObjectWithName(String name){
+        for (GameObject go: gameObjects) {
+            if (go.getName() == name){
+                return go;
+            }
+        }
+        return null;
+    }
+
     public void removeGameObjectFromScene(GameObject go){
         gameObjects.remove(go);
     }

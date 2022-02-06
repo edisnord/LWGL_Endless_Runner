@@ -16,6 +16,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 public class LevelEditorScene extends Scene {
 
     private GameObject obj1;
+    private EnemyManager enemyManager;
     private List<Spritesheet> sprites;
     private List<GameObject> bgTiles = new ArrayList<>();
     Transform bgParent = new Transform(new Vector2f(0, 0), new Vector2f(0, 0));
@@ -32,7 +33,7 @@ public class LevelEditorScene extends Scene {
 
         this.camera = new Camera(new Vector2f(0, 0));
 
-
+        this.enemyManager = new EnemyManager(this, 0f);
 
         for(int i = -2; i < 14; i++){
             for(int j = 0; j < 7; j++){
@@ -43,16 +44,11 @@ public class LevelEditorScene extends Scene {
             }
         }
 
-//        GameObject bg = new GameObject("background", new Transform(new Vector2f(-400, 0), new Vector2f(3000, 2000)));
-//        bg.addComponent(new SpriteRenderer(sprites.get(1).getSprite(7)));
-//        this.addGameObjectToScene(bg);
-
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(100, 100), new Vector2f(128, 145)));
+        obj1 = new GameObject("Player", new Transform(new Vector2f(100, 100), new Vector2f(128, 145)));
         obj1.addComponent(new SpriteRenderer(sprites.get(0).getSprite(19)));
         obj1.addComponent(new PlayerController(10f, 10f));
         obj1.addComponent(new PlayerAnimator(AssetPool.getSpritesheet("assets/images/charactersheet.png"), true));
         this.addGameObjectToScene(obj1);
-
 
     }
 
@@ -68,9 +64,13 @@ public class LevelEditorScene extends Scene {
         AssetPool.addSpritesheet("assets/images/areasheet.png",
                 new Spritesheet(AssetPool.getTexture("assets/images/areasheet.png"),
                         16, 16, 30, 0));
+        AssetPool.addSpritesheet("assets/images/wolfsheet1.png",
+                new Spritesheet(AssetPool.getTexture("assets/images/wolfsheet1.png"),
+                        64, 32, 15, 0));
 
         sprites.add(0, AssetPool.getSpritesheet("assets/images/charactersheet.png"));
         sprites.add(1, AssetPool.getSpritesheet("assets/images/areasheet.png"));
+        sprites.add(2, AssetPool.getSpritesheet("assets/images/wolfsheet1.png"));
 
     }
 
@@ -107,6 +107,8 @@ public class LevelEditorScene extends Scene {
 
         moveCamera();
         System.out.println("FPS: " + (1.0f / dt));
+
+        enemyManager.update(dt);
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);
