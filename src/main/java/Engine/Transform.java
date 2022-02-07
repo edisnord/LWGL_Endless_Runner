@@ -46,7 +46,7 @@ public class Transform {
     private Transform(Vector2f position, Vector2f scale, Transform parent){
         isParent = false;
         this.parent = parent;
-        init(new Vector2f(position.x + parent.position.x, position.y + parent.position.y), scale);
+        init(position, scale);
     }
 
     public void init(Vector2f position, Vector2f scale) {

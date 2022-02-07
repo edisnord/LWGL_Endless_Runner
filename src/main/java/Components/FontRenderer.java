@@ -1,5 +1,6 @@
 package Components;
 
+import Components.SpriteRenderer;
 import Engine.Component;
 
 public class FontRenderer extends Component {

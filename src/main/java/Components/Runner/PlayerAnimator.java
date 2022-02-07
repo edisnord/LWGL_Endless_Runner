@@ -1,9 +1,15 @@
-package Components;
+package Components.Runner;
 
+import Components.Runner.Animator;
+import Components.SpriteRenderer;
+import Components.Spritesheet;
 import Engine.KeyListener;
+import Engine.Runner.Events;
 
-public class EnemyAnimator extends Animator{
-    public EnemyAnimator(Spritesheet spritesheet, boolean keyPressEvents) {
+public class PlayerAnimator extends Animator {
+
+
+    public PlayerAnimator(Spritesheet spritesheet, boolean keyPressEvents) {
         super(spritesheet, keyPressEvents);
     }
 
@@ -15,11 +21,21 @@ public class EnemyAnimator extends Animator{
     @Override
     public void update(float dt) {
 
+        int[] upIndices = {
+                0, 1
+        };
+        int[] rightIndices = {
+                18, 19, 20
+        };
+        int[] downIndices = {
+                37, 38
+        };
         int[] leftIndices = {
-                0, 1, 2, 3, 4
+                55, 56
         };
 
-        animateIdle(leftIndices, 0.05f, dt);
+        if(!Events.gameOver)
+          animateIdle(rightIndices, 0.1f, dt);
 
     }
 
@@ -49,19 +65,20 @@ public class EnemyAnimator extends Animator{
 
         float timeBetweenFrames = speed;
 
-        animTempTime -= dt;
-        if (animTempTime <= 0) {
-            if (animIndex == sequence.length) animIndex = 0;
+            animTempTime -= dt;
+            if (animTempTime <= 0) {
+                if (animIndex == sequence.length) animIndex = 0;
 
-            spriteRenderer.setSprite(spritesheet.getSprite(sequence[animIndex]));
+                spriteRenderer.setSprite(spritesheet.getSprite(sequence[animIndex]));
 
-            animIndex++;
+                animIndex++;
 
-            animTempTime = timeBetweenFrames;
+                animTempTime = timeBetweenFrames;
 
 
         }
 
 
     }
+
 }
