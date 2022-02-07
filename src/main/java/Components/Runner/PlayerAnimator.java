@@ -25,7 +25,7 @@ public class PlayerAnimator extends Animator {
                 0, 1
         };
         int[] rightIndices = {
-                18, 19, 20
+                18, 19, 20, 19
         };
         int[] downIndices = {
                 37, 38
@@ -35,7 +35,7 @@ public class PlayerAnimator extends Animator {
         };
 
         if(!Events.gameOver)
-          animateIdle(rightIndices, 0.1f, dt);
+          animateIdle(rightIndices, 0.02f, dt);
 
     }
 

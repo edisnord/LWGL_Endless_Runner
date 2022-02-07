@@ -7,6 +7,7 @@ import Engine.Transform;
 public class Enemy extends GameObject {
     private GameObject player;
     private Scene scene;
+    public boolean disappear = false;
 
     public Enemy(String name) {
         super(name);
@@ -29,6 +30,12 @@ public class Enemy extends GameObject {
             Events.gameOver = true;
         }
 
+        //Register point
+
+        if(this.transform.position.x < -100 && !disappear){
+            Events.score += 1;
+            disappear = true;
+        }
 
 
         //&& this.transform.position.y + this.transform.scale.y < player.transform.position.y + player.transform.scale.y))

@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class EnemyManager {
     private Scene scene;
-    List<GameObject> enemies;
+    List<Enemy> enemies;
     public float interval;
     public float temp;
 
@@ -30,11 +30,20 @@ public class EnemyManager {
     }
 
     public void update(float dt){
+
+        for (Enemy e: enemies) {
+            if(e.disappear){
+                enemies.remove(e);
+                scene.removeGameObjectFromScene(e);
+                scene.renderer.remove(e);
+            }
+        }
+
         if(!Events.gameOver) {
             temp -= dt;
             Random random = new Random();
             if (temp <= 0) {
-                GameObject nme = new Enemy("enemy", new Transform(new Vector2f(1200, random.nextInt(600)), new Vector2f(2 * 100, 2 * 50)), this.scene);
+                var nme = new Enemy("enemy", new Transform(new Vector2f(1200, random.nextInt(600)), new Vector2f(2 * 100, 2 * 50)), this.scene);
                 nme.addComponent(new SpriteRenderer(AssetPool.getSpritesheet("assets/images/wolfsheet1.png").getSprite(5)));
                 nme.addComponent(new EnemyAnimator(AssetPool.getSpritesheet("assets/images/wolfsheet1.png"), false));
                 scene.addGameObjectToScene(nme);

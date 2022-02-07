@@ -26,7 +26,7 @@ public class Window {
     private Window() {
         this.width = 980;
         this.height = 540;
-        this.title = "Mario";
+        this.title = "GLgame (Project Edis Hasaj)";
         r = 0;
         b = 0;
         g = 0;

@@ -18,15 +18,15 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 
 public class LevelEditorScene extends Scene {
 
-    private GameObject obj1;
     private EnemyManager enemyManager;
-    private NumberRenderer numberRenderer;
     public List<Spritesheet> sprites;
     private List<GameObject> bgTiles = new ArrayList<>();
     List<GameObject> numbers = new ArrayList<>();
     Transform bgParent = new Transform(new Vector2f(0, 0), new Vector2f(0, 0));
-    Transform scorePos = new Transform(new Vector2f(1080, 10), new Vector2f(120, 25));
     GameObject ob1 = new GameObject("Object 1", new Transform(new Vector2f(-100, 100), new Vector2f(128, 145)));
+
+
+    private float spawnInterval = 1.0f;
 
     public LevelEditorScene() {
         sprites = new ArrayList<>();
@@ -39,7 +39,7 @@ public class LevelEditorScene extends Scene {
 
         this.camera = new Camera(new Vector2f(0, 0));
 
-        this.enemyManager = new EnemyManager(this, 2f);
+        this.enemyManager = new EnemyManager(this, spawnInterval);
 
         for(int i = -2; i < 14; i++){
             for(int j = 0; j < 7; j++){
@@ -50,17 +50,33 @@ public class LevelEditorScene extends Scene {
             }
         }
 
-        var scoreText = new GameObject("scoreText", scorePos);
+        var scoreText = new GameObject("scoreText", new Transform(new Vector2f(1080, 10), new Vector2f(120, 25)));
         scoreText.addComponent(new SpriteRenderer(new Sprite(new Texture("assets/images/score.png"))));
         addGameObjectToScene(scoreText);
+
+
+        var num3 = new GameObject("digit3", new Transform(new Vector2f(1250, 5), new Vector2f(20, 30)));
+        num3.addComponent(new SpriteRenderer(sprites.get(3).getSprite(16)));
+        numbers.add(0, num3);
+        addGameObjectToScene(num3);
+
+
+        var num2 = new GameObject("digit2", new Transform(new Vector2f(1230, 5), new Vector2f(20, 30)));
+        num2.addComponent(new SpriteRenderer(sprites.get(3).getSprite(16)));
+        numbers.add(1, num2);
+        addGameObjectToScene(num2);
+
+
+        var num1 = new GameObject("digit1", new Transform(new Vector2f(1210, 5), new Vector2f(20, 30)));
+        num1.addComponent(new SpriteRenderer(sprites.get(3).getSprite(16)));
+        numbers.add(2, num1);
+        addGameObjectToScene(num1);
 
 
         //number width: 20px
         //number height: 25px
 
-        numberRenderer = new NumberRenderer(this, scorePos);
-
-        obj1 = new GameObject("Player", new Transform(new Vector2f(100, 100), new Vector2f(128, 145)));
+        GameObject obj1 = new GameObject("Player", new Transform(new Vector2f(100, 100), new Vector2f(128, 145)));
         obj1.addComponent(new SpriteRenderer(sprites.get(0).getSprite(19)));
         obj1.addComponent(new PlayerController(10f, 10f));
         obj1.addComponent(new PlayerAnimator(AssetPool.getSpritesheet("assets/images/charactersheet.png"), true));
@@ -69,23 +85,26 @@ public class LevelEditorScene extends Scene {
     }
 
     private void loadResources() {
-        AssetPool.getShader("assets/shaders/default.glsl");
+        if(Events.firstPlay) {
+            AssetPool.getShader("assets/shaders/default.glsl");
 
-        AssetPool.addSpritesheet("assets/images/spritesheet.png",
-                new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),
-                        16, 16, 26, 0));
-        AssetPool.addSpritesheet("assets/images/charactersheet.png",
-                new Spritesheet(AssetPool.getTexture("assets/images/charactersheet.png"),
-                        16, 18, 72, 0));
-        AssetPool.addSpritesheet("assets/images/areasheet.png",
-                new Spritesheet(AssetPool.getTexture("assets/images/areasheet.png"),
-                        16, 16, 30, 0));
-        AssetPool.addSpritesheet("assets/images/wolfsheet1.png",
-                new Spritesheet(AssetPool.getTexture("assets/images/wolfsheet1.png"),
-                        64, 32, 15, 0));
-        AssetPool.addSpritesheet("assets/images/numberssheet.png",
-                new Spritesheet(AssetPool.getTexture("assets/images/numberssheet.png"),
-                        8, 8, 83, 0));
+            AssetPool.addSpritesheet("assets/images/spritesheet.png",
+                    new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),
+                            16, 16, 26, 0));
+            AssetPool.addSpritesheet("assets/images/charactersheet.png",
+                    new Spritesheet(AssetPool.getTexture("assets/images/charactersheet.png"),
+                            16, 18, 72, 0));
+            AssetPool.addSpritesheet("assets/images/areasheet.png",
+                    new Spritesheet(AssetPool.getTexture("assets/images/areasheet.png"),
+                            16, 16, 30, 0));
+            AssetPool.addSpritesheet("assets/images/wolfsheet1.png",
+                    new Spritesheet(AssetPool.getTexture("assets/images/wolfsheet1.png"),
+                            64, 32, 15, 0));
+            AssetPool.addSpritesheet("assets/images/numberssheet.png",
+                    new Spritesheet(AssetPool.getTexture("assets/images/numberssheet.png"),
+                            8, 8, 83, 0));
+            AssetPool.getTexture("assets/images/restart.png");
+        }
 
         sprites.add(0, AssetPool.getSpritesheet("assets/images/charactersheet.png"));
         sprites.add(1, AssetPool.getSpritesheet("assets/images/areasheet.png"));
@@ -95,24 +114,37 @@ public class LevelEditorScene extends Scene {
     }
 
     int reps;
+    int lastScore;
 
     @Override
     public void update(float dt) {
 
         if(!Events.gameOver) {
-            autoScroll();
-            bgParent.position.x -= 5;
+
+            if (Events.score % 15 == 0 && Events.score != lastScore && enemyManager.interval > 0.3f) {
+                enemyManager.interval -= 0.3f;
+            }
+
+            lastScore = Events.score;
+
+                autoScroll();
+                bgParent.position.x -= 5;
+
+            moveCamera();
+            System.out.println("FPS: " + (1.0f / dt));
+
+            enemyManager.update(dt);
+
+            for (GameObject go : this.gameObjects) {
+                go.update(dt);
+            }
+
+            renderNumbers();
+
+        } else {
+            renderer.batches.clear();
+            Window.changeScene(1);
         }
-        moveCamera();
-        System.out.println("FPS: " + (1.0f / dt));
-
-        enemyManager.update(dt);
-
-        for (GameObject go : this.gameObjects) {
-            go.update(dt);
-        }
-
-        renderNumbers();
 
         this.renderer.render();
     }
@@ -158,38 +190,32 @@ public class LevelEditorScene extends Scene {
         int single = 0;
         int mode = 0;
 
-        for (GameObject go: numbers) {
-            removeGameObjectFromScene(go);
-            scorePos.deleteChild(go.transform);
-            renderer.remove(go);
-        }
-
-        numbers.clear();
-
         String score = String.valueOf(Events.score);
 
         if(score.length() == 1) {
-            single = score.charAt(0) - 48;
+            single = score.charAt(0) - 32;
             mode = 0;
         }
         else if(score.length() == 2){
-            single = score.charAt(1);
-            hundredth = score.charAt(0);
+            single = score.charAt(1) - 32;
+            tenth = score.charAt(0) - 32;
             mode = 1;
         } else if (score.length() == 3){
-            single = score.charAt(2);
-            tenth = score.charAt(1);
-            hundredth = score.charAt(0);
+            single = score.charAt(2) - 32;
+            tenth = score.charAt(1) - 32;
+            hundredth = score.charAt(0) - 32;
             mode = 2;
         }
 
         if(mode == 0){
-            numbers.add(new GameObject("Single", scorePos.addAndReturnChild(new Transform(new Vector2f(20 + 120, 0), new Vector2f(20, 25)))));
-            numbers.get(0).addComponent(new SpriteRenderer(sprites.get(3).getSprite(single + 16)));
-        }
-
-        for (GameObject go: numbers) {
-            addGameObjectToScene(go);
+            numbers.get(0).getComponent(SpriteRenderer.class).setSprite(sprites.get(3).getSprite(single));
+        } else if (mode == 1){
+            numbers.get(0).getComponent(SpriteRenderer.class).setSprite(sprites.get(3).getSprite(single));
+            numbers.get(1).getComponent(SpriteRenderer.class).setSprite(sprites.get(3).getSprite(tenth));
+        } else if(mode == 2){
+            numbers.get(0).getComponent(SpriteRenderer.class).setSprite(sprites.get(3).getSprite(single));
+            numbers.get(1).getComponent(SpriteRenderer.class).setSprite(sprites.get(3).getSprite(tenth));
+            numbers.get(2).getComponent(SpriteRenderer.class).setSprite(sprites.get(3).getSprite(hundredth));
         }
 
     }
