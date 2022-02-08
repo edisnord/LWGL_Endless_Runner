@@ -1,15 +1,11 @@
 package Engine.Runner;
 
-import Components.Sprite;
 import Components.SpriteRenderer;
 import Engine.GameObject;
 import Engine.LevelEditorScene;
-import Engine.Scene;
 import Engine.Transform;
-import Util.AssetPool;
 import org.joml.Vector2f;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 

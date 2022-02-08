@@ -1,4 +1,4 @@
-package Components;
+package Render;
 
 import Render.Texture;
 import org.joml.Vector2f;
@@ -11,10 +11,10 @@ public class Sprite {
     public Sprite(Texture texture){
         this.texture = texture;
         Vector2f[] texCoords = {
-                new Vector2f(0.5f, 0.5f),
-                new Vector2f(0.5f, 0),
+                new Vector2f(1f, 1f),
+                new Vector2f(1f, 0),
                 new Vector2f(0, 0),
-                new Vector2f(0, 0.5f),
+                new Vector2f(0, 1f),
 
         };
         this.texCoords = texCoords;

@@ -35,7 +35,7 @@ public class PlayerAnimator extends Animator {
         };
 
         if(!Events.gameOver)
-          animateIdle(rightIndices, 0.02f, dt);
+          animateIdle(rightIndices, 0.07f, dt);
 
     }
 

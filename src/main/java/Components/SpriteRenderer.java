@@ -2,6 +2,7 @@ package Components;
 
 import Engine.Component;
 import Engine.Transform;
+import Render.Sprite;
 import Render.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;

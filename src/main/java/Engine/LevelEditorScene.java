@@ -5,7 +5,7 @@ import Components.Runner.PlayerAnimator;
 import Components.Runner.PlayerController;
 import Engine.Runner.EnemyManager;
 import Engine.Runner.Events;
-import Engine.Runner.NumberRenderer;
+import Render.Sprite;
 import Render.Texture;
 import Util.AssetPool;
 import org.joml.Vector2f;
@@ -26,7 +26,7 @@ public class LevelEditorScene extends Scene {
     GameObject ob1 = new GameObject("Object 1", new Transform(new Vector2f(-100, 100), new Vector2f(128, 145)));
 
 
-    private float spawnInterval = 1.0f;
+    private float spawnInterval = 1.2f;
 
     public LevelEditorScene() {
         sprites = new ArrayList<>();
@@ -114,21 +114,21 @@ public class LevelEditorScene extends Scene {
     }
 
     int reps;
-    int lastScore;
+    int lastScore1;
 
     @Override
     public void update(float dt) {
 
         if(!Events.gameOver) {
 
-            if (Events.score % 15 == 0 && Events.score != lastScore && enemyManager.interval > 0.3f) {
+            if (Events.score % 15 == 0 && Events.score != lastScore1 && enemyManager.interval > 0.3f) {
                 enemyManager.interval -= 0.3f;
             }
 
-            lastScore = Events.score;
+            lastScore1 = Events.score;
 
                 autoScroll();
-                bgParent.position.x -= 5;
+                bgParent.position.x -= 10;
 
             moveCamera();
             System.out.println("FPS: " + (1.0f / dt));
@@ -149,21 +149,33 @@ public class LevelEditorScene extends Scene {
         this.renderer.render();
     }
 
+    int index = 5;
+    int lastScore2;
+
     private void autoScroll(){
         reps++;
+
+        if (Events.score % 10 == 0 && Events.score != lastScore2) {
+            index++;
+            if(index > 11){
+                index = 5;
+            }
+        }
+
+        lastScore2 = Events.score;
 
         if(reps % 10 == 0){
 
             for(int j = 0; j < 7; j++){
                 GameObject bg = new GameObject("bg" + j + "extra", bgParent.addAndReturnChild(new Transform(new Vector2f( 5 * reps + 1295 + ( 100 * (reps / 20f)), j * 100), new Vector2f(100, 100))));
-                bg.addComponent(new SpriteRenderer(sprites.get(1).getSprite(7)));
+                bg.addComponent(new SpriteRenderer(sprites.get(1).getSprite(index)));
                 bgTiles.add(bg);
                 this.addGameObjectToScene(bg);
             }
 
         }
 
-        if(reps % 20 == 0){
+        if(reps % 10 == 0){
             for (int i = 0; i < 7; i++) {
                 GameObject go = bgTiles.get(i);
                 bgTiles.remove(i);
@@ -204,6 +216,12 @@ public class LevelEditorScene extends Scene {
             single = score.charAt(2) - 32;
             tenth = score.charAt(1) - 32;
             hundredth = score.charAt(0) - 32;
+            mode = 2;
+        } else if (score.length() > 3){
+            int index = score.length() - 3;
+            single = score.charAt(2 + index) - 32;
+            tenth = score.charAt(1 + index) - 32;
+            hundredth = score.charAt(index) - 32;
             mode = 2;
         }
 

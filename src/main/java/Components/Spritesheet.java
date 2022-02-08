@@ -1,5 +1,6 @@
 package Components;
 
+import Render.Sprite;
 import Render.Texture;
 import org.joml.Vector2f;
 

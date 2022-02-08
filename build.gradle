@@ -6,7 +6,7 @@ group 'org.example'
 version '1.0-SNAPSHOT'
 project.ext.lwjglVersion = "3.3.0"
 project.ext.jomlVersion = "1.10.3"
-project.ext.lwjglNatives = "natives-windows"
+project.ext.lwjglNatives = "natives-linux"
 
 repositories {
     mavenCentral()
@@ -16,13 +16,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-
-    implementation files("C:/Users/Edis Hasaj/IdeaProjects/GE-Attempt/lwjgl javas/lwjgl-javadoc.jar")
-    implementation files("C:/Users/Edis Hasaj/IdeaProjects/GE-Attempt/lwjgl javas/lwjgl-sources.jar")
-    implementation files("C:/Users/Edis Hasaj/IdeaProjects/GE-Attempt/lwjgl javas/lwjgl.jar")
-    implementation files("C:/Users/Edis Hasaj/IdeaProjects/GE-Attempt/lwjgl javas/lwjglx-debug-1.0.0.jar")
-    implementation files("C:/Users/Edis Hasaj/IdeaProjects/GE-Attempt/lwjgl javas/lwjglx-debug-1.0.0-javadoc.jar")
-    implementation files("C:/Users/Edis Hasaj/IdeaProjects/GE-Attempt/lwjgl javas/lwjglx-debug-1.0.0-sources.jar")
 
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-assimp"

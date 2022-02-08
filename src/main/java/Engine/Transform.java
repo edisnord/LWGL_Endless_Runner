@@ -31,12 +31,6 @@ public class Transform {
         children = new ArrayList<>();
     }
 
-    public Transform(Vector2f position) {
-        isParent = true;
-        init(position, new Vector2f());
-        children = new ArrayList<>();
-    }
-
     public Transform(Vector2f position, Vector2f scale) {
         isParent = true;
         init(position, scale);
@@ -61,7 +55,6 @@ public class Transform {
     }
 
     public Transform copy(){
-
         return new Transform(new Vector2f(this.position.x), new Vector2f(this.position.y));
     }
 

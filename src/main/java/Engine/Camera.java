@@ -12,14 +12,14 @@ public class Camera {
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
-        adjustProjection(40.0f, 22.0f);
+        adjustProjection();
     }
 
-    public void adjustProjection(float zoomr, float zooml){
+    public void adjustProjection(){
         projectionMatrix.identity();
 
         //Camera projection matrix creator
-        projectionMatrix.ortho(0.0f, 32.0f * zoomr, 0.0f, 32.0f * zooml, 0.0f, 100.0f);
+        projectionMatrix.ortho(0.0f, 32.0f * 40, 0.0f, 32.0f * 22.0f, 0.0f, 100.0f);
     }
 
     public Matrix4f getViewMatrix(){

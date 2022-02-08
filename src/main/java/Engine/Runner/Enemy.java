@@ -20,7 +20,7 @@ public class Enemy extends GameObject {
     @Override
     public void update(float dt) {
         if(!Events.gameOver)
-        transform.position.x -= 10;
+        transform.position.x -= 15;
 
         //Incredibly verbose collision checking
         if((this.transform.position.x + 50 >= player.transform.position.x && this.transform.position.x + 60 <= player.transform.position.x + player.transform.scale.x)

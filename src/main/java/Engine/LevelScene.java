@@ -1,6 +1,6 @@
 package Engine;
 
-import Components.Sprite;
+import Render.Sprite;
 import Components.SpriteRenderer;
 import Components.Spritesheet;
 import Engine.Runner.Events;

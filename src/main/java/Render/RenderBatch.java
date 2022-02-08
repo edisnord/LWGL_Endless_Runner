@@ -1,10 +1,8 @@
 
         package Render;
 
-        import Components.Sprite;
         import Components.SpriteRenderer;
         import Engine.Window;
-        import Render.Shader;
         import Util.AssetPool;
         import org.joml.Vector2f;
         import org.joml.Vector4f;
