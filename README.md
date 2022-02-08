@@ -1,2 +1,1 @@
-Attempting to create a game engine using GamesWithGabe's tutorial
-It is based on the Jade engine https://github.com/codingminecraft/MarioYoutube
+The bare bones of a game engine, with a simple game on top to test it
