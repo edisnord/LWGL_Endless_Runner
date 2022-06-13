@@ -16,4 +16,8 @@ terrain is constantly generated).
 
 ![screen-gif](./gif/runner1.gif)
 
-
+## Art credits
+The wolf enemy sprite was made by William.Thompsonj at OpenGameArt.org <br>
+https://opengameart.org/content/lpc-wolf-animation
+<br>
+I have lost the links of the other spritesheets sadly, but if the artists ever come accross this repo, contact me so i can add your OpenGameArt accounts here :)
