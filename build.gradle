@@ -6,7 +6,7 @@ group 'org.example'
 version '1.0-SNAPSHOT'
 project.ext.lwjglVersion = "3.3.0"
 project.ext.jomlVersion = "1.10.3"
-project.ext.lwjglNatives = "natives-linux"
+project.ext.lwjglNatives = "natives-windows"
 
 repositories {
     mavenCentral()
